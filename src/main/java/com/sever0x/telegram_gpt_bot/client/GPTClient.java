@@ -27,7 +27,7 @@ public class GPTClient {
     private String gptModel;
 
     public String getGPTResponse(String prompt) throws ServiceException {
-        String requestBody = String.format("{\"model\": \"%s\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}]}", gptModel, prompt);
+        String requestBody = String.format("{\"model\": \"%s\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}]}", gptModel, escapeDoubleQuotes(prompt));
 
         var request = new Request.Builder()
                 .url(url)
@@ -42,5 +42,9 @@ public class GPTClient {
         } catch (IOException e) {
             throw new ServiceException("An error occurred while accessing GPT", e);
         }
+    }
+
+    private String escapeDoubleQuotes(String input) {
+        return input.replace("\"", "\\\"");
     }
 }

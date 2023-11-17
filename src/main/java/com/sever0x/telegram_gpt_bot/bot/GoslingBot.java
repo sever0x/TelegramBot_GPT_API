@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -33,7 +34,7 @@ public class GoslingBot extends TelegramLongPollingBot {
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     break;
                 default:
-                    handleUserMessage(chatId, messageText);
+                    handleUserMessage(chatId, messageText, update.getMessage());
             }
         }
     }
@@ -50,9 +51,9 @@ public class GoslingBot extends TelegramLongPollingBot {
         sendTextMessage(chatId, answer);
     }
 
-    private void handleUserMessage(String chatId, String userMessage) {
+    private void handleUserMessage(String chatId, String userMessage, Message message) {
         try {
-            String gptResponse = gptService.getGPTResponse(userMessage);
+            String gptResponse = gptService.getGPTResponse(message, userMessage);
             sendTextMessage(chatId, gptResponse);
         } catch (ServiceException e) {
             e.printStackTrace();
