@@ -1,4 +1,4 @@
-package com.sever0x.telegram_gpt_bot.model.response;
+package com.sever0x.telegram_gpt_bot.model.response.gpt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sever0x.telegram_gpt_bot.client.GPTClient;
 import com.sever0x.telegram_gpt_bot.exception.ServiceException;
 import com.sever0x.telegram_gpt_bot.model.entity.MessageLog;
-import com.sever0x.telegram_gpt_bot.model.response.GPTResponse;
+import com.sever0x.telegram_gpt_bot.model.response.gpt.GPTResponse;
 import com.sever0x.telegram_gpt_bot.repository.MessageLogRepository;
 import com.sever0x.telegram_gpt_bot.service.GPTService;
 import lombok.RequiredArgsConstructor;

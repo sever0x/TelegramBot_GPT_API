@@ -1,4 +1,4 @@
-package com.sever0x.telegram_gpt_bot.model.response;
+package com.sever0x.telegram_gpt_bot.model.response.gpt;
 
 import lombok.Getter;
 import lombok.Setter;
