@@ -13,6 +13,10 @@ public record AuthRequest(
         @NotNull
         @NotEmpty
         @Min(6)
-        String password
+        String password,
+
+        @NotNull
+        @NotEmpty
+        String secret
 ) {
 }

@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 
 public interface AuthService {
 
-    AuthResponse register(AuthRequest authRequest);
+    AuthResponse register(AuthRequest authRequest, boolean isSecretValid);
 
     AuthResponse login(Authentication authentication);
 }

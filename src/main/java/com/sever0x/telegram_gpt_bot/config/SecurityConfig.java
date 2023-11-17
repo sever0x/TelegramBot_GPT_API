@@ -33,6 +33,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Optional;
 
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -45,6 +46,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(c -> c
                 .requestMatchers("/echo/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers(POST, "/admin/register").permitAll()
+                .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
         );
 
