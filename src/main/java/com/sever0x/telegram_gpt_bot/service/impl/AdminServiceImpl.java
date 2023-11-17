@@ -1,19 +1,24 @@
 package com.sever0x.telegram_gpt_bot.service.impl;
 
+import com.sever0x.telegram_gpt_bot.bot.GoslingBot;
+import com.sever0x.telegram_gpt_bot.exception.ServiceException;
 import com.sever0x.telegram_gpt_bot.model.entity.Admin;
 import com.sever0x.telegram_gpt_bot.model.request.auth.AuthRequest;
 import com.sever0x.telegram_gpt_bot.model.response.auth.AuthResponse;
 import com.sever0x.telegram_gpt_bot.repository.AdminRepository;
-import com.sever0x.telegram_gpt_bot.service.AuthService;
+import com.sever0x.telegram_gpt_bot.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -21,11 +26,15 @@ import java.time.temporal.ChronoUnit;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AdminServiceImpl implements AdminService {
+
+    private final GoslingBot goslingBot;
 
     private final JwtEncoder jwtEncoder;
 
     private final AdminRepository adminRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AuthResponse register(AuthRequest authRequest, boolean isSecretValid) {
@@ -43,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         adminRepository.save(
                 Admin.builder()
                         .username(authRequest.username())
-                        .password(authRequest.password())
+                        .password(passwordEncoder.encode(authRequest.password()))
                         .build()
         );
         return getAuthResponse(authRequest.username());
@@ -53,6 +62,19 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(Authentication authentication) {
         String username = authentication.getName();
         return getAuthResponse(username);
+    }
+
+    @Override
+    public void sendCustomMessage(String chatId, String message) throws ServiceException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(message);
+
+        try {
+            goslingBot.execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 
     private AuthResponse getAuthResponse(String username) {

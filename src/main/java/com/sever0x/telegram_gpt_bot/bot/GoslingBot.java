@@ -3,7 +3,6 @@ package com.sever0x.telegram_gpt_bot.bot;
 import com.sever0x.telegram_gpt_bot.exception.ServiceException;
 import com.sever0x.telegram_gpt_bot.service.GPTService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
