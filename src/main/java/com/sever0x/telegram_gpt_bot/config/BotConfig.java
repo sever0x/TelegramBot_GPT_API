@@ -8,6 +8,8 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 public class BotConfig {
 
@@ -20,6 +22,10 @@ public class BotConfig {
 
     @Bean
     public OkHttpClient httpClient() {
-        return new OkHttpClient();
+        return new OkHttpClient().newBuilder()
+                .connectTimeout(180, TimeUnit.SECONDS)
+                .writeTimeout(180, TimeUnit.SECONDS)
+                .readTimeout(180, TimeUnit.SECONDS)
+                .build();
     }
 }
