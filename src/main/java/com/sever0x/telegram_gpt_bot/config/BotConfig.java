@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
-public class BotConfiguration {
+public class BotConfig {
 
     @Bean
     public TelegramBotsApi telegramBotsApi(GoslingBot goslingBot) throws TelegramApiException {

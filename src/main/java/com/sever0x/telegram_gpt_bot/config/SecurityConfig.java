@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.sever0x.telegram_gpt_bot.model.entity.Admin;
 import com.sever0x.telegram_gpt_bot.repository.AdminRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.OAuth2ResourceServerDsl;
@@ -26,6 +27,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -47,6 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/echo/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers(POST, "/admin/register").permitAll()
+                .requestMatchers(POST, "/admin/login").permitAll()
                 .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
         );
@@ -72,7 +76,22 @@ public class SecurityConfig {
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
                 );
 
+        http.cors(withDefaults());
+
         return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
+            }
+        };
     }
 
     @Bean
