@@ -5,6 +5,8 @@ import com.sever0x.telegram_gpt_bot.service.GPTService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.ActionType;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -53,6 +55,7 @@ public class GoslingBot extends TelegramLongPollingBot {
 
     private void handleUserMessage(String chatId, String userMessage, Message message) {
         try {
+            sendTypingAction(chatId);
             String gptResponse = gptService.getGPTResponse(message, userMessage);
             sendTextMessage(chatId, gptResponse);
         } catch (ServiceException e) {
@@ -66,6 +69,17 @@ public class GoslingBot extends TelegramLongPollingBot {
             execute(new SendMessage(chatId, text));
         } catch (TelegramApiException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendTypingAction(String chatId) throws ServiceException {
+        try {
+            SendChatAction method = new SendChatAction();
+            method.setChatId(chatId);
+            method.setAction(ActionType.TYPING);
+            execute(method);
+        } catch (TelegramApiException e) {
+            throw new ServiceException("Typing action error", e);
         }
     }
 }
